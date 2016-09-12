@@ -27,7 +27,6 @@ class Connection(object):
     r.publish(self.outputChannel, message)
 
   def _waitForRedis(self):
-    debug('Starting Connection Redis thread.')
     while True:
       for item in self.pubsub.listen():
         if type(item['data']) is long:
@@ -36,6 +35,7 @@ class Connection(object):
         self.processInput(item['data'])
 
   def waitForRedis(self):
+    debug('Starting connection Redis thread.')
     t = threading.Thread(target=self._waitForRedis)
     t.setDaemon(True)
     t.start()

@@ -2,8 +2,11 @@ import time, os, threading, random
 from debug import debug
 from gameObject import GameObject
 
+
 class Game(object):
   def __init__(self):
+    self.currentId = 0
+
     self.objects = []
     self.connections = []
 
@@ -43,7 +46,7 @@ class Game(object):
       conn.attachGameObject(obj)
 
       self.objects.append(obj)
-      debug('Registered new connection: id [{}]'.format(conn.id))
+      debug('Registered new connection. [id={0}]'.format(conn.id))
       return True
     else:
       debug('Rejected new connection (already exists): id [{}]'.format(conn.id))
@@ -56,6 +59,7 @@ class Game(object):
       'An owl hoots in the distance.'
     ]
     currentAtmosphere = random.choice(atmosphereOptions)
+    debug(currentAtmosphere, 'test')
     # shady
     # just as a demo, sends currentAtmosphere to all objects
     for obj in self.objects:

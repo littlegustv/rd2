@@ -1,23 +1,31 @@
 from debug import debug
-import uuid
+from commands.command_handler import CommandHandler
+
 
 class GameObject(object):
   def __init__(self, game):
     self.game = game
-    self.name = 'Default GameObject'
-    self.uuid = uuid.uuid1()
+    self.name = 'Default'
+
+    self.uid = game.currentId
+    game.currentId += 1
+
     self.input_queue = []
     self.output_queue = []
     self.lag = 0
     self.connection = None
 
-    debug('New GameObject created. Name: [{}] UUID [{}].'.format(self.name, self.uuid))
+    self.commandHandler = CommandHandler()
+    self.commandHandler.registerModule('test')
+
+    debug('New GameObject created. [name={0},id={1}].'.format(self.name, self.uid))
 
   def microLoop_update(self, game):
     if self.connection:
       # render output buffer to connection
       if len(self.output_queue) > 0:
-        self.connection.sendOutput("\n".join(self.output_queue))
+        joinedMessage = '\r\n'.join(self.output_queue)
+        self.connection.sendOutput(joinedMessage)
         self.output_queue = []
 
       # handle command from input buffer
@@ -26,7 +34,7 @@ class GameObject(object):
 
   def macroRound_update(self, game):
     pass
-    #debug('UUID [{}] macroRound_update.'.format(self.uuid))
+    #debug('UUID [{}] macroRound_update.'.format(self.uid))
 
   def input(self, message):
     self.input_queue.append(message)
@@ -35,7 +43,8 @@ class GameObject(object):
     self.output_queue.append(message)
 
   def handle(self, message):
-    self.output("You say '{}'".format(message.strip()))
+    self.commandHandler.tryCommand(message, self, self.game)
+    # self.output("You say '{}'".format(message.strip()))
 
   def attachConnection(self, connection):
     self.connection = connection

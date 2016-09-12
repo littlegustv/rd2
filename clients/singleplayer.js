@@ -14,7 +14,6 @@ function getInput() {
 
 	process.stdin.on('data', function (text) {
 		processedText = text.replace(/\n$/, '')
-		console.log('Logged Input: ' + processedText);
 		pub.publish('from client ' + id, processedText);
 	});
 }
