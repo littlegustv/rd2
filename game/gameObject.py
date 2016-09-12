@@ -39,4 +39,3 @@ class GameObject(object):
 
   def attachConnection(self, connection):
     self.connection = connection
-    self.connection.attachGameObject(self)

@@ -1,6 +1,6 @@
 import time, os, threading, random
 from debug import debug
-from player import Player
+from gameObject import GameObject
 
 class Game(object):
   def __init__(self):
@@ -37,8 +37,12 @@ class Game(object):
 
   def registerConnection(self, conn):
     if next((x for x in self.connections if x.id == conn.id), None) is None:
-      player = Player(self, conn)
-      self.objects.append(player)
+      obj = GameObject(self)
+
+      obj.attachConnection(conn)
+      conn.attachGameObject(obj)
+
+      self.objects.append(obj)
       debug('Registered new connection: id [{}]'.format(conn.id))
       return True
     else:
