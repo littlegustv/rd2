@@ -11,15 +11,17 @@ class Connection(object):
     self.pubsub = r.pubsub()
     self.game = None  #shady
 
+    self.gameObject = None
+
     self.pubsub.subscribe('from client {}'.format(id))
     self.waitForRedis()
 
   def processInput(self, input):
-    if hasattr(self, 'player'):
-      self.player.input(input)
+    if self.gameObject:
+      self.gameObject.input(input)
 
-  def setPlayer(self, player):
-    self.player = player
+  def attachGameObject(self, obj):
+    self.gameObject = obj
 
   def sendOutput(self, message):
     r.publish(self.outputChannel, message)
