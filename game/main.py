@@ -2,7 +2,6 @@ import sys, os
 
 from debug import debug
 from game import Game
-from gameObject import GameObject
 from redis_settings import r
 from connection import Connection
 

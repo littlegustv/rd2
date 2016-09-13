@@ -1,7 +1,6 @@
 from debug import debug
 from commands.command_handler import CommandHandler
 
-
 class GameObject(object):
   def __init__(self, game):
     self.game = game
@@ -9,6 +8,9 @@ class GameObject(object):
 
     self.uid = game.currentId
     game.currentId += 1
+
+    self.objects = []
+    self.parent = None
 
     self.input_queue = []
     self.output_queue = []
@@ -25,7 +27,7 @@ class GameObject(object):
       # render output buffer to connection
       if len(self.output_queue) > 0:
         joinedMessage = '\r\n'.join(self.output_queue)
-        self.connection.sendOutput(joinedMessage)
+        self.connection.sendOutput("{}\r\n".format(joinedMessage))
         self.output_queue = []
 
       # handle command from input buffer
