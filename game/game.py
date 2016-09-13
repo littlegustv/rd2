@@ -1,19 +1,25 @@
 import time, os, threading, random
 from debug import debug
-from gameObject import GameObject
+from gameobjects.gameObject import GameObject
+from util.procedural import SimpleProcedural
 
-
-class Game(object):
+class Game(object, SimpleProcedural):
   def __init__(self):
     self.currentId = 0
 
+    # all objects
     self.objects = []
+    self.rooms = []
+    self.mobiles = []
+
     self.connections = []
 
     self.microLoop_timer = float(os.environ['RD_MICROLOOP_TIMER'])
     self.macroRound_timer = float(os.environ['RD_MACROROUND_TIMER'])
     
     self.microLoop_counter = 0
+
+    self.generate_rooms()
 
   def start(self):
     self.microLoop_update()
@@ -42,6 +48,9 @@ class Game(object):
     if next((x for x in self.connections if x.id == conn.id), None) is None:
       obj = GameObject(self)
 
+      obj.parent = random.choice(self.rooms)
+      obj.parent.objects.append(obj)
+
       obj.attachConnection(conn)
       conn.attachGameObject(obj)
 
@@ -58,9 +67,9 @@ class Game(object):
       'The leaves around you rustle in the breeze.',
       'An owl hoots in the distance.'
     ]
-    currentAtmosphere = random.choice(atmosphereOptions)
-    debug(currentAtmosphere, 'test')
-    # shady
     # just as a demo, sends currentAtmosphere to all objects
-    for obj in self.objects:
-      obj.output(currentAtmosphere)
+    for room in self.rooms:
+      # shady
+      currentAtmosphere = random.choice(atmosphereOptions)
+      room.output(currentAtmosphere)
+      debug(currentAtmosphere, 'test')
