@@ -1,4 +1,5 @@
 from debug import debug
+import random
 from commands.command_handler import CommandHandler
 
 class GameObject(object):
@@ -40,6 +41,48 @@ class GameObject(object):
     pass
     #debug('UUID [{}] macroRound_update.'.format(self.uid))
 
+  def inflect(self, word):
+    synonyms = {
+      "r": "'s",
+      "are": "is",
+      "have": "has",
+      "were": "was"
+    }
+    if word == None or len(word) <= 0:
+      return ""
+    elif word in synonyms.keys():
+      if word == "r":
+        return "{}".format(synonyms[word])
+      else:
+        return " {}".format(synonyms[word])
+    else:
+      return " {}s".format(word)
+
+  def can_see(self, object):
+    return True#random.randint(0,100) < 65
+
+  def render(self, message, arguments, auto_output=True):
+    output_buffer = []
+    for arg in arguments:
+      if self == arg[0]:
+        arg[1] = "" if arg[1] == None else arg[1]
+        if arg[1] == 'r' or arg[1] == "":
+          output_buffer.append("you{}".format(arg[1]))
+        else:
+          output_buffer.append("you {}".format(arg[1]))
+      else:
+        if self.can_see(arg[0]):
+          name = arg[0].name
+        else:
+          name = "someone"
+        output_buffer.append("{}{}".format(name, self.inflect(arg[1])))
+    result = message.format(*output_buffer)
+    result = result[0].capitalize() + result[1:]
+    if auto_output:
+      self.output(result)
+    else:
+      return result
+
   def input(self, message):
     self.input_queue.append(message)
 
@@ -56,11 +99,11 @@ class GameObject(object):
   def getOtherObjectsInRoom(self):
     return [obj for obj in self.game.objects if self.room == obj.room and obj is not self]
 
-  def name(self, looker=None):
+  def getName(self, looker=None):
     if looker is not None and looker.canSee(self):
       return self.name
     else:
       return '[SUPER] Something'
 
   def canSee(self, target):
-    return False
+    return random.randint(0, 100) > 35

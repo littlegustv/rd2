@@ -22,6 +22,11 @@ class Room(GameObject):
     for obj in self.objects:
       obj.output(message)
 
+  # render is for output that needs to be processed before it is sent
+  def render(self, message, args):
+    for obj in self.objects:
+      obj.render(message, args)
+
   def setExit(self, direction, room, oneway=False):
     self.exits[direction] = room
     if not oneway:
