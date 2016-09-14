@@ -1,5 +1,17 @@
 from debug import debug
 
+def do_where(args, player, game):
+  output_buffer = ["Players near you:"]
+  for m in [mobile for mobile in game.mobiles if mobile.connection]:
+    output_buffer.append("{}: {}".format(m.getName(looker=player), m.parent.getName(looker=player)))
+  player.output("\n".join(output_buffer))
+
+def do_who(args, player, game):
+  output_buffer = ["Players Online:"]
+  for m in [mobile for mobile in game.mobiles if mobile.connection]:
+    output_buffer.append("{}".format(m.getName(looker=player)))
+  player.output("\n".join(output_buffer))
+
 def do_say(args, player, game):
   if len(args) == 0:
     player.output('Say what?')
@@ -8,7 +20,17 @@ def do_say(args, player, game):
   message = (' ').join(args)
 
   if player.parent:
-    player.parent.render("{} " + message, [player], ['say'])
+    player.parent.render("{} '" + message + "'", [[player, 'say']])
+
+def do_yell(args, player, game):
+  if len(args) == 0:
+    player.output('What exactly is so important?')
+    return
+
+  message = (' ').join(args)
+
+  for room in game.rooms:
+    room.render("{} '" + message + "'", [[player, 'yell']])
 
 def do_look(args, player, game):
   if player.room:
@@ -47,13 +69,13 @@ def do_move(direction, player, game):
     player.output("There is no exit in that direction.")
   else:
     for mobile in player.getOtherObjectsInRoom():
-      mobile.output('{} leaves {}.'.format(player.name(looker=mobile), direction))
+      mobile.output('{} leaves {}.'.format(player.getName(looker=mobile), direction))
 
     player.room.objects.remove(player)
     player.room = player.room.exits[direction]
     player.room.objects.append(player)
 
     for mobile in player.getOtherObjectsInRoom():
-      mobile.output('{} has arrived.'.format(player.name(looker=mobile)))
+      mobile.output('{} has arrived.'.format(player.getName(looker=mobile)))
 
     do_look([], player, game)

@@ -60,6 +60,7 @@ class Game(object, SimpleProcedural):
       conn.attachGameObject(obj)
 
       self.objects.append(obj)
+      self.mobiles.append(obj)
       debug('Registered new connection. [id={0}]'.format(conn.id))
       return True
     else:

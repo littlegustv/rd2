@@ -23,9 +23,9 @@ class Room(GameObject):
       obj.output(message)
 
   # render is for output that needs to be processed before it is sent
-  def render(self, message, objects, words):
+  def render(self, message, args):
     for obj in self.objects:
-      obj.render(message, objects, words)
+      obj.render(message, args)
 
   def setExit(self, direction, room, oneway=False):
     self.exits[direction] = room
