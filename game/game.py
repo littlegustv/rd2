@@ -48,8 +48,13 @@ class Game(object, SimpleProcedural):
     if next((x for x in self.connections if x.id == conn.id), None) is None:
       obj = GameObject(self)
 
-      obj.parent = random.choice(self.rooms)
-      obj.parent.objects.append(obj)
+      startRoom = random.choice(self.rooms)
+
+      # shady duplication to maintain both .room and .parent for now
+      obj.room = startRoom
+      obj.parent = startRoom
+      obj.room.objects.append(obj)
+
 
       obj.attachConnection(conn)
       conn.attachGameObject(obj)

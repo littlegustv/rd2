@@ -12,6 +12,8 @@ class GameObject(object):
     self.objects = []
     self.parent = None
 
+    self.room = None
+
     self.input_queue = []
     self.output_queue = []
     self.lag = 0
@@ -50,3 +52,6 @@ class GameObject(object):
 
   def attachConnection(self, connection):
     self.connection = connection
+
+  def getOtherObjectsInRoom(self):
+    return [obj for obj in self.game.objects if self.room == obj.room and obj is not self]
