@@ -72,4 +72,4 @@ class Game(object, SimpleProcedural):
       # shady
       currentAtmosphere = random.choice(atmosphereOptions)
       room.output(currentAtmosphere)
-      debug(currentAtmosphere, 'test')
+      # debug(currentAtmosphere, 'test')
