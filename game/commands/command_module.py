@@ -8,12 +8,6 @@ class CommandModule(object):
 
 		self.factoryCreate()
 
-	def getCommand(self, command):
-		for key in sorted(self.commands):
-			if key.startswith(command.lower()):
-				return self.commands[key]
-				break
-
 	def factoryCreate(self):
 		self.commands = {}
 

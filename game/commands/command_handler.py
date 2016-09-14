@@ -19,13 +19,23 @@ class CommandHandler(object):
 			# No args
 			args = []
 
+		allCommands = {}
+
+			# Build giant dictionary
 		for module in self.modules:
-			commandFunction = module.getCommand(command)
+			allCommands.update(module.commands)
+
+			commandFunction = self.getCommand(command, allCommands)
 			if commandFunction is not None:
 				commandFunction(args, player, game)
 				break
 		else:
 			player.output('Huh?')
+
+	def getCommand(self, command, allCommands):
+		for key in sorted(allCommands):
+			if key.startswith(command.lower()):
+				return allCommands[key]
 
 	def registerModule(self, name):
 		if name in [module.name for module in self.modules]:
