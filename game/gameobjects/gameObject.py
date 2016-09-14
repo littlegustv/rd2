@@ -39,44 +39,37 @@ class GameObject(object):
     pass
     #debug('UUID [{}] macroRound_update.'.format(self.uid))
 
-  def singularize(self, word):
-    # shady shady shady -> need better way for handling exceptions!!
-    singles = {"has": "have", "is": "are"}
-    if not word:
+  def interpolate(self, word):
+    synonyms = {
+      "r": "'s",
+      "are": "is",
+      "have": "has",
+      "were": "was"
+    }
+    if (not word) or (len(word) <= 0):
       return ""
-    elif word == "POSSESSIVE":
-      return "r"
-    elif word in singles.keys():
-      return " {}".format(singles[word])
-    else:
-      return " {}".format(word)
-
-  def pluralize(self, word):
-    #shady - find a better place for this
-    plurals = {"have": "has", "are": "is"}
-    if not word:
-      return ""
-    elif word == "POSSESSIVE":
-      return "'s"
-    elif word in plurals.keys():
-      return " {}".format(plurals[word])
+    elif word in synonyms.keys():
+      if word == "r":
+        return "{}".format(synonyms[word])
+      else:
+        return " {}".format(synonyms[word])
     else:
       return " {}s".format(word)
 
   def can_see(self, object):
     return True#random.randint(0,100) < 65
 
-  def render(self, message, objects, words, auto_output=True):
+  def render(self, message, arguments, auto_output=True):
     output_buffer = []
-    for i in range(0, len(objects)):
-      if self == objects[i]:
-        output_buffer.append("you{}".format(self.singularize(words[i])))
+    for arg in arguments:
+      if self == arg[0]:
+        output_buffer.append("you{}".format(arg[1]))
       else:
-        if self.can_see(objects[i]):
-          name = objects[i].name
+        if self.can_see(arg[0]):
+          name = arg[0].name
         else:
           name = "someone"
-        output_buffer.append("{}{}".format(name, self.pluralize(words[i])))
+        output_buffer.append("{}{}".format(name, self.interpolate(arg[1])))
     result = message.format(*output_buffer)
     result = result[0].capitalize() + result[1:]
     if auto_output:
