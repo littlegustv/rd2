@@ -1,31 +1,29 @@
 from debug import debug
 
 def do_say(args, player, game):
-  # Say to everyone in the game
   if len(args) == 0:
     player.output('Say what?')
     return
 
   message = (' ').join(args)
-  player.output('You say \'{0}\'.'.format(message))
 
   if player.parent:
-    player.parent.output('{0} says \'{1}\'.'.format(player.name, message))
+    player.parent.render("{} " + message, [player], ['say'])
 
 def do_look(args, player, game):
   if player.parent:
     exits = [ k for k, v in player.parent.exits.iteritems() if v ]
     exits_string =  "There are exits to the {}.".format(", ".join(exits)) if len(exits) > 0 else "There are no exits."
-    objects_string = "\n".join(["{} is here.".format(object.name) for object in player.parent.objects])
+    objects_string = "\n".join([player.render("{} here.", [object], ['is'], False) for object in player.parent.objects])
     player.output('You are in the {}.\n{}\n{}'.format(player.parent.name, exits_string, objects_string))
-    player.parent.output('{} looks around.'.format(player.name))
+    player.parent.render('{} around.', [player], ['look'])
 
 def do_name(args, player, game):
   if len(args) == 0:
     player.output('Your name is {}.'.format(player.name))
   else:
     player.name = args[0]
-    player.output('Your name is {}.'.format(player.name))
+    player.output('Your name is now {}.'.format(player.name))
 
 def do_south(args, player, game):
   do_move("south", player, game)
@@ -45,9 +43,9 @@ def do_move(direction, player, game):
   elif not player.parent.exits[direction]:
     player.output("There is no exit in that direction.")
   else:
-    player.parent.output('{} leaves {}'.format(player.name, direction))
+    player.parent.render('{} ' + direction, [player], ['leave'])
     player.parent.objects.remove(player)
     player.parent = player.parent.exits[direction]
     player.parent.objects.append(player)
-    player.parent.output('{} has arrived.'.format(player.name))
+    player.parent.render('{} arrived.', [player], ['have'])
     player.input('look')

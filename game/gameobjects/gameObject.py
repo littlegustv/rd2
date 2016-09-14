@@ -1,4 +1,5 @@
 from debug import debug
+import random
 from commands.command_handler import CommandHandler
 
 class GameObject(object):
@@ -37,6 +38,51 @@ class GameObject(object):
   def macroRound_update(self, game):
     pass
     #debug('UUID [{}] macroRound_update.'.format(self.uid))
+
+  def singularize(self, word):
+    # shady shady shady -> need better way for handling exceptions!!
+    singles = {"has": "have", "is": "are"}
+    if not word:
+      return ""
+    elif word == "POSSESSIVE":
+      return "r"
+    elif word in singles.keys():
+      return " {}".format(singles[word])
+    else:
+      return " {}".format(word)
+
+  def pluralize(self, word):
+    #shady - find a better place for this
+    plurals = {"have": "has", "are": "is"}
+    if not word:
+      return ""
+    elif word == "POSSESSIVE":
+      return "'s"
+    elif word in plurals.keys():
+      return " {}".format(plurals[word])
+    else:
+      return " {}s".format(word)
+
+  def can_see(self, object):
+    return True#random.randint(0,100) < 65
+
+  def render(self, message, objects, words, auto_output=True):
+    output_buffer = []
+    for i in range(0, len(objects)):
+      if self == objects[i]:
+        output_buffer.append("you{}".format(self.singularize(words[i])))
+      else:
+        if self.can_see(objects[i]):
+          name = objects[i].name
+        else:
+          name = "someone"
+        output_buffer.append("{}{}".format(name, self.pluralize(words[i])))
+    result = message.format(*output_buffer)
+    result = result[0].capitalize() + result[1:]
+    if auto_output:
+      self.output(result)
+    else:
+      return result
 
   def input(self, message):
     self.input_queue.append(message)
