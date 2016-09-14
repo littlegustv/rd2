@@ -55,3 +55,12 @@ class GameObject(object):
 
   def getOtherObjectsInRoom(self):
     return [obj for obj in self.game.objects if self.room == obj.room and obj is not self]
+
+  def getName(self, looker=None):
+    if looker is not None and looker.canSee(self):
+      return self.name
+    else:
+      return '[SUPER] Something'
+
+  def canSee(self, target):
+    return False

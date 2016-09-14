@@ -49,13 +49,13 @@ def do_move(direction, player, game):
     player.output("There is no exit in that direction.")
   else:
     for mobile in player.getOtherObjectsInRoom():
-      mobile.output('{} leaves {}.'.format(player.name, direction))
+      mobile.output('{} leaves {}.'.format(player.getName(looker=mobile), direction))
 
     player.room.objects.remove(player)
     player.room = player.room.exits[direction]
     player.room.objects.append(player)
 
     for mobile in player.getOtherObjectsInRoom():
-      mobile.output('{} has arrived.'.format(player.name))
+      mobile.output('{} has arrived.'.format(player.getName(looker=mobile)))
 
     do_look([], player, game)
