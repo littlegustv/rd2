@@ -39,14 +39,14 @@ class GameObject(object):
     pass
     #debug('UUID [{}] macroRound_update.'.format(self.uid))
 
-  def interpolate(self, word):
+  def inflect(self, word):
     synonyms = {
       "r": "'s",
       "are": "is",
       "have": "has",
       "were": "was"
     }
-    if (not word) or (len(word) <= 0):
+    if word == None or len(word) <= 0:
       return ""
     elif word in synonyms.keys():
       if word == "r":
@@ -63,13 +63,17 @@ class GameObject(object):
     output_buffer = []
     for arg in arguments:
       if self == arg[0]:
-        output_buffer.append("you{}".format(arg[1]))
+        arg[1] = "" if arg[1] == None else arg[1]
+        if arg[1] == 'r' or arg[1] == "":
+          output_buffer.append("you{}".format(arg[1]))
+        else:
+          output_buffer.append("you {}".format(arg[1]))
       else:
         if self.can_see(arg[0]):
           name = arg[0].name
         else:
           name = "someone"
-        output_buffer.append("{}{}".format(name, self.interpolate(arg[1])))
+        output_buffer.append("{}{}".format(name, self.inflect(arg[1])))
     result = message.format(*output_buffer)
     result = result[0].capitalize() + result[1:]
     if auto_output:
