@@ -1,6 +1,7 @@
 import random
 from debug import debug
 from gameobjects.room import Room, inverseDirection
+from gameobjects.itemObject import Item
 
 class SimpleProcedural():
   def generate_rooms(self):
@@ -18,5 +19,6 @@ class SimpleProcedural():
         newExit = random.choice(unusedExits)
         room.setExit(inverseDirection[newExit], oldRoom)
 
-      self.rooms.append(room)
-      self.objects.append(room)
+      for i in range(0, random.randint(0,4)):
+        item = Item(self)
+        room.objects.append(item)

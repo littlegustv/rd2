@@ -60,8 +60,9 @@ class Game(object, SimpleProcedural):
       obj.attachConnection(conn)
       conn.attachGameObject(obj)
 
-      self.objects.append(obj)
-      self.mobiles.append(obj)
+      # I am removing these, and adding them to the gameobject INIT function (and mobile.init)
+      # self.objects.append(obj)
+      # self.mobiles.append(obj)
       debug('Registered new connection. [id={0}]'.format(conn.id))
       return True
     else:
