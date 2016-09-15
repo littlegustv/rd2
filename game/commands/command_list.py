@@ -17,7 +17,7 @@ def do_remove(args, player, game):
     if item.name.lower().startswith(args[0].lower()):
       player.equipment.objects.remove(item)
       player.inventory.objects.append(item)
-      player.parent.render('{} using ' + item.name, [[player, 'stop']])
+      player.parent.render('{} using {}', [[player, 'stop'], [item, None]])
       return
 
   # not found
@@ -35,7 +35,7 @@ def do_wear(args, player, game):
     if item.name.lower().startswith(args[0].lower()):
       player.equipment.objects.append(item)
       player.inventory.objects.remove(item)
-      player.parent.render('{} using ' + item.name, [[player, 'start']])
+      player.parent.render('{} using {}', [[player, 'start'], [item, None]])
       return
 
   # not found
@@ -59,7 +59,7 @@ def do_drop(args, player, game):
     if item.name.lower().startswith(args[0].lower()):
       player.inventory.objects.remove(item)
       player.parent.objects.append(item)
-      player.parent.render('{} ' + item.name, [[player, 'drop']])
+      player.parent.render('{} {}', [[player, 'drop'], [item, None]])
       return
 
   # not found
@@ -78,7 +78,7 @@ def do_get(args, player, game):
     if item.name.lower().startswith(args[0].lower()):
       player.inventory.objects.append(item)
       player.parent.objects.remove(item)
-      player.parent.render('{} ' + item.name, [[player, 'get']])
+      player.parent.render('{} {}', [[player, 'get'], [item, None]])
       return
 
   # not found
