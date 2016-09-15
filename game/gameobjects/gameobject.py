@@ -127,5 +127,4 @@ class GameObject(object):
       return 0
 
   def canSee(self, target):
-    return False #test
     return random.randint(0, 100) > 35
