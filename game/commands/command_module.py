@@ -25,4 +25,4 @@ class CommandModule(object):
 			self.commands['say'] = command_list.do_say
 			self.commands['yell'] = command_list.do_yell
 			self.commands['where'] = command_list.do_where
-			self.commands['who'] = command_list.do_wh0
+			self.commands['who'] = command_list.do_who
