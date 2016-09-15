@@ -26,3 +26,10 @@ class CommandModule(object):
 			self.commands['yell'] = command_list.do_yell
 			self.commands['where'] = command_list.do_where
 			self.commands['who'] = command_list.do_who
+			self.commands['stats'] = command_list.do_stats
+			self.commands['get'] = command_list.do_get
+			self.commands['drop'] = command_list.do_drop
+			self.commands['inventory'] = command_list.do_inventory
+			self.commands['wear'] = command_list.do_wear
+			self.commands['remove'] = command_list.do_remove
+			self.commands['equipment'] = command_list.do_equipment
