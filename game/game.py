@@ -1,6 +1,7 @@
 import time, os, threading, random
 from debug import debug
 from gameobjects.gameobject import GameObject
+from gameobjects.mobile import Mobile
 from util.procedural import SimpleProcedural
 
 class Game(object, SimpleProcedural):
@@ -46,7 +47,7 @@ class Game(object, SimpleProcedural):
 
   def registerConnection(self, conn):
     if next((x for x in self.connections if x.id == conn.id), None) is None:
-      obj = GameObject(self)
+      obj = Mobile(self)
 
       startRoom = random.choice(self.rooms)
 

@@ -20,6 +20,8 @@ class GameObject(object):
     self.lag = 0
     self.connection = None
 
+    self.blindName = 'someobject'
+
     self.commandHandler = CommandHandler()
     self.commandHandler.registerModule('test')
 
@@ -57,9 +59,6 @@ class GameObject(object):
         return " {}".format(synonyms[word])
     else:
       return " {}s".format(word)
-
-  def can_see(self, object):
-    return True#random.randint(0,100) < 65
 
   def render(self, message, arguments, auto_output=True):
     output_buffer = []
@@ -103,7 +102,8 @@ class GameObject(object):
     if looker is not None and looker.canSee(self):
       return self.name
     else:
-      return '[SUPER] Something'
+      return self.blindName
 
   def canSee(self, target):
+    return False #test
     return random.randint(0, 100) > 35
