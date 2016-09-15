@@ -24,7 +24,7 @@ class Mobile(GameObject):
     self.commandHandler.registerModule('combat')
 
     self.attacksPerRound = 2
-    self.damageNoun = 'grep'
+    self.damageNoun = random.choice(['grep', 'entangle', 'strangle', 'blast'])
 
   def macroRound_update(self, game):
     super(Mobile, self).macroRound_update(game)

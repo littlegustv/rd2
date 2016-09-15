@@ -137,4 +137,5 @@ class GameObject(object):
     if self == target:
       return True
 
+    return True
     return random.randint(0, 100) > 35
