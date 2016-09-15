@@ -33,3 +33,7 @@ class CommandModule(object):
 			self.commands['wear'] = command_list.do_wear
 			self.commands['remove'] = command_list.do_remove
 			self.commands['equipment'] = command_list.do_equipment
+
+		if self.name == 'combat':
+			self.commands['kill'] = command_list.do_kill
+			self.commands['flee'] = command_list.do_flee

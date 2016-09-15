@@ -100,8 +100,8 @@ class GameObject(object):
   def attachConnection(self, connection):
     self.connection = connection
 
-  def getOtherObjectsInRoom(self):
-    return [obj for obj in self.game.objects if self.room == obj.room and obj is not self]
+  def getOtherObjectsInRoom(self, exceptions=[]):
+    return [obj for obj in self.game.objects if self.room == obj.room and obj is not self and obj not in exceptions]
 
   def getName(self, looker=None):
     if looker is not None and looker.canSee(self):
@@ -127,4 +127,7 @@ class GameObject(object):
       return 0
 
   def canSee(self, target):
+    if self == target:
+      return True
+
     return random.randint(0, 100) > 35

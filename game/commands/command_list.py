@@ -1,3 +1,5 @@
+import random
+
 from debug import debug
 
 def do_equipment(args, player, game):
@@ -176,3 +178,45 @@ def do_move(direction, player, game):
       mobile.output('{} has arrived.'.format(player.getName(looker=mobile)))
 
     do_look([], player, game)
+
+def do_kill(args, player, game):
+  if player.fighting is not None:
+    player.output('You are already fighting!')
+    return
+
+  if len(args) == 0:
+    player.output('Kill whom?')
+    return
+
+  target = args[0]
+  targetMobile = player.room.getMobileInRoomByName(target, looker=player)
+
+  if targetMobile is None:
+    player.output('They aren\'t here.')
+    return
+
+  if targetMobile == player:
+    player.output('Suicide is a mortal sin.')
+    return
+
+  do_yell(['Help! I am being attacked by {0}!'.format(player.getName(looker=targetMobile)),], targetMobile, game)
+  player.startCombatWith(targetMobile)
+  player.doCombatRound()
+
+def do_flee(args, player, game):
+  if player.fighting is None:
+    player.output('You aren\'t fighting anyone.')
+    return
+
+  if random.randint(0,9) > 4:
+    player.output('You can\'t escape!')
+
+    for mobile in player.getOtherObjectsInRoom():
+      mobile.output('{} tries to flee, but fails!'.format(player.getName(looker=mobile)))
+  else:
+    player.removeFromCombat()
+
+    player.output('You flee from combat!')
+
+    for mobile in player.getOtherObjectsInRoom():
+      mobile.output('{} has fled!'.format(player.getName(looker=mobile)))

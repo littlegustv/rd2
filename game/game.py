@@ -39,7 +39,7 @@ class Game(object, SimpleProcedural):
 
   def macroLoop_update(self):
 
-    if random.randint(0,2) == 0:
+    if random.randint(0,10) == 0:
       self.broadcastAtmosphere()
 
     for obj in self.objects:
@@ -49,7 +49,7 @@ class Game(object, SimpleProcedural):
     if next((x for x in self.connections if x.id == conn.id), None) is None:
       obj = Mobile(self)
 
-      startRoom = random.choice(self.rooms)
+      startRoom = self.rooms[0]
 
       # shady duplication to maintain both .room and .parent for now
       obj.room = startRoom
@@ -76,8 +76,7 @@ class Game(object, SimpleProcedural):
       'An owl hoots in the distance.'
     ]
     # just as a demo, sends currentAtmosphere to all objects
+    # shady
+    currentAtmosphere = random.choice(atmosphereOptions)
     for room in self.rooms:
-      # shady
-      currentAtmosphere = random.choice(atmosphereOptions)
       room.output(currentAtmosphere)
-      # debug(currentAtmosphere, 'test')

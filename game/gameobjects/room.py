@@ -1,5 +1,7 @@
+from mobile import Mobile
 from gameobject import GameObject
 from debug import debug
+from util.search import findInList
 
 inverseDirection = {"north": "south", "south": "north", "east": "west", "west": "east" }
 
@@ -32,3 +34,8 @@ class Room(GameObject):
     self.exits[direction] = room
     if not oneway:
       room.exits[inverseDirection[direction]] = self
+
+  def getMobileInRoomByName(self, name, looker=None):
+    mobiles = [obj for obj in self.objects if isinstance(obj, Mobile) and looker.canSee(obj)]
+
+    return findInList(mobiles, name)
