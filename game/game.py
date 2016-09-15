@@ -1,6 +1,6 @@
 import time, os, threading, random
 from debug import debug
-from gameobjects.gameObject import GameObject
+from gameobjects.gameobject import GameObject
 from util.procedural import SimpleProcedural
 
 class Game(object, SimpleProcedural):

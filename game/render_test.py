@@ -1,6 +1,6 @@
 import unittest
 from game import Game
-from gameobjects.gameObject import GameObject
+from gameobjects.gameobject import GameObject
 from gameobjects.room import Room
 
 class TestOutputRendering(unittest.TestCase):

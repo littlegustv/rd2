@@ -1,4 +1,4 @@
-from gameObject import GameObject
+from gameobject import GameObject
 from debug import debug
 
 inverseDirection = {"north": "south", "south": "north", "east": "west", "west": "east" }
