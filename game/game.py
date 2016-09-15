@@ -1,6 +1,7 @@
 import time, os, threading, random
 from debug import debug
 from gameobjects.gameObject import GameObject
+from gameobjects.mobile import Mobile
 from util.procedural import SimpleProcedural
 
 class Game(object, SimpleProcedural):
@@ -46,7 +47,7 @@ class Game(object, SimpleProcedural):
 
   def registerConnection(self, conn):
     if next((x for x in self.connections if x.id == conn.id), None) is None:
-      obj = GameObject(self)
+      obj = Mobile(self)
 
       startRoom = random.choice(self.rooms)
 
@@ -59,8 +60,9 @@ class Game(object, SimpleProcedural):
       obj.attachConnection(conn)
       conn.attachGameObject(obj)
 
-      self.objects.append(obj)
-      self.mobiles.append(obj)
+      # I am removing these, and adding them to the gameobject INIT function (and mobile.init)
+      # self.objects.append(obj)
+      # self.mobiles.append(obj)
       debug('Registered new connection. [id={0}]'.format(conn.id))
       return True
     else:

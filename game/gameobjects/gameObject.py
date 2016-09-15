@@ -1,10 +1,15 @@
 from debug import debug
 import random
 from commands.command_handler import CommandHandler
+from util.status import Status
 
 class GameObject(object):
   def __init__(self, game):
     self.game = game
+
+    # add self to game.gameobjects HERE so it's always in one plcae
+    self.game.objects.append(self)
+
     self.name = 'Default'
 
     self.uid = game.currentId
@@ -12,6 +17,9 @@ class GameObject(object):
 
     self.objects = []
     self.parent = None
+
+    self.stats = Status(self)
+    self.modifiers = Status(self)
 
     self.room = None
 
@@ -23,7 +31,7 @@ class GameObject(object):
     self.commandHandler = CommandHandler()
     self.commandHandler.registerModule('test')
 
-    debug('New GameObject created. [name={0},id={1}].'.format(self.name, self.uid))
+    #debug('New GameObject created. [name={0},id={1}].'.format(self.name, self.uid))
 
   def microLoop_update(self, game):
     if self.connection:
@@ -104,6 +112,23 @@ class GameObject(object):
       return self.name
     else:
       return '[SUPER] Something'
+
+  def getStat(self, stat):
+    if hasattr(self.stats, stat):
+      s = getattr(self.stats, stat)
+      for obj in self.objects:
+        s += obj.getModifier(stat)
+      return s
+    else:
+      debug('Error: asked for a stat that does not exist ({})'.format(stat))
+      return 0
+
+  def getModifier(self, stat):
+    if hasattr(self.modifiers, stat):
+      return getattr(self.modifiers, stat)
+    else:
+      debug('Error: asked for a modifiers that does not exist ({})'.format(stat))
+      return 0
 
   def canSee(self, target):
     return random.randint(0, 100) > 35

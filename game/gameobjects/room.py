@@ -13,6 +13,7 @@ class Room(GameObject):
       "east": None,
       "west": None
     }
+    self.game.rooms.append(self)
 
   def input(self, message):
     for obj in self.objects:

@@ -1,5 +1,99 @@
 from debug import debug
 
+def do_equipment(args, player, game):
+  output_buffer = ["You are wearing:"]
+  for item in player.equipment.objects:
+    output_buffer.append(item.getName(player))
+  player.output("\n".join(output_buffer))
+
+def do_remove(args, player, game):
+  if len(args) == 0:
+    player.output('Remove what?')
+    return
+
+  items = player.equipment.objects
+
+  for item in items:
+    if item.name.lower().startswith(args[0].lower()):
+      player.equipment.objects.remove(item)
+      player.inventory.objects.append(item)
+      player.parent.render('{} using ' + item.name, [[player, 'stop']])
+      return
+
+  # not found
+  player.output("You aren't wearing that.")
+
+
+def do_wear(args, player, game):
+  if len(args) == 0:
+    player.output('Wear what?')
+    return
+
+  items = player.inventory.objects
+
+  for item in items:
+    if item.name.lower().startswith(args[0].lower()):
+      player.equipment.objects.append(item)
+      player.inventory.objects.remove(item)
+      player.parent.render('{} using ' + item.name, [[player, 'start']])
+      return
+
+  # not found
+  player.output("You don't have that.")
+
+
+def do_inventory(args, player, game):
+  output_buffer = ["You are carrying:"]
+  for item in player.inventory.objects:
+    output_buffer.append(item.getName(player))
+  player.output("\n".join(output_buffer))
+
+def do_drop(args, player, game):
+  if len(args) == 0:
+    player.output('Drop what?')
+    return
+
+  items = player.inventory.objects
+
+  for item in items:
+    if item.name.lower().startswith(args[0].lower()):
+      player.inventory.objects.remove(item)
+      player.parent.objects.append(item)
+      player.parent.render('{} ' + item.name, [[player, 'drop']])
+      return
+
+  # not found
+  player.output("You don't have that.")
+
+
+def do_get(args, player, game):
+  if len(args) == 0:
+    player.output('Get what?')
+    return
+
+  #shady -> using __class__.__name__ to check if something can be gotten -> improve later?
+  items = [item for item in player.parent.objects if item.__class__.__name__ == 'Item']
+
+  for item in items:
+    if item.name.lower().startswith(args[0].lower()):
+      player.inventory.objects.append(item)
+      player.parent.objects.remove(item)
+      player.parent.render('{} ' + item.name, [[player, 'get']])
+      return
+
+  # not found
+  player.output("You don't see that here.")
+
+
+# shady demo command to let me see a single stat ('damage')
+def do_stats(args, player, game):
+  output_buffer = ["Stats:"]
+
+  for key in player.stats.keys():
+    output_buffer.append("{}: {}".format(key.capitalize(), player.getStat(key)))
+  
+  player.output("\n".join(output_buffer))
+
 def do_where(args, player, game):
   output_buffer = ["Players near you:"]
   for m in [mobile for mobile in game.mobiles if mobile.connection]:
@@ -74,6 +168,9 @@ def do_move(direction, player, game):
     player.room.objects.remove(player)
     player.room = player.room.exits[direction]
     player.room.objects.append(player)
+
+    # compromise!
+    player.parent = player.room
 
     for mobile in player.getOtherObjectsInRoom():
       mobile.output('{} has arrived.'.format(player.getName(looker=mobile)))
