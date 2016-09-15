@@ -20,5 +20,12 @@ class SimpleProcedural():
         room.setExit(inverseDirection[newExit], oldRoom)
 
       for i in range(0, random.randint(0,4)):
-        item = Item(self)
-        room.objects.append(item)
+        self.generate_item(room)
+
+  def generate_item(self, room):
+    adjectives = ["Crunchy", "Ashen", "Chitinous", "Quaking", "Vibrant", "Violent", "Fierce", "Absolute"]
+    nouns = ["Carrot", "Aspect", "Exoskeleton", "Quasar", "Scheme", "Diatribe", "Facade"]
+
+    item = Item(self)
+    item.name = "{} {}".format(random.choice(adjectives), random.choice(nouns))
+    room.objects.append(item)

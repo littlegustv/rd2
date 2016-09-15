@@ -1,10 +1,9 @@
 from debug import debug
 
 def do_equipment(args, player, game):
-  output_buffer = ["You are wearing:"]
+  player.output("You are wearing:")
   for item in player.equipment.objects:
-    output_buffer.append(item.getName(player))
-  player.output("\n".join(output_buffer))
+    player.output(item.getName(player))
 
 def do_remove(args, player, game):
   if len(args) == 0:
@@ -43,11 +42,10 @@ def do_wear(args, player, game):
 
 
 def do_inventory(args, player, game):
-  output_buffer = ["You are carrying:"]
+  player.output("You are carrying:")
   for item in player.inventory.objects:
-    output_buffer.append(item.getName(looker=player))
-  player.output("\n".join(output_buffer))
-
+    player.output(item.getName(looker=player))
+  
 def do_drop(args, player, game):
   if len(args) == 0:
     player.output('Drop what?')
@@ -87,25 +85,21 @@ def do_get(args, player, game):
 
 # shady demo command to let me see a single stat ('damage')
 def do_stats(args, player, game):
-  output_buffer = ["Stats:"]
+  player.output("Stats:")
 
   for key in player.stats.keys():
-    output_buffer.append("{}: {}".format(key.capitalize(), player.getStat(key)))
+    player.output("{}: {}".format(key.capitalize(), player.getStat(key)))
   
-  player.output("\n".join(output_buffer))
-
 def do_where(args, player, game):
-  output_buffer = ["Players near you:"]
+  player.output("Players near you:")
   for m in [mobile for mobile in game.mobiles if mobile.connection]:
-    output_buffer.append("{}: {}".format(m.getName(looker=player), m.parent.getName(looker=player)))
-  player.output("\n".join(output_buffer))
-
+    player.output("{}: {}".format(m.getName(looker=player), m.parent.getName(looker=player)))
+  
 def do_who(args, player, game):
-  output_buffer = ["Players Online:"]
+  player.output("Players Online:")
   for m in [mobile for mobile in game.mobiles if mobile.connection]:
-    output_buffer.append("{}".format(m.getName(looker=player)))
-  player.output("\n".join(output_buffer))
-
+    player.output("{}".format(m.getName(looker=player)))
+  
 def do_say(args, player, game):
   if len(args) == 0:
     player.output('Say what?')
@@ -129,9 +123,11 @@ def do_yell(args, player, game):
 def do_look(args, player, game):
   if player.room:
     exits = [ k for k, v in player.room.exits.iteritems() if v ]
-    exits_string =  "There are exits to the {}.".format(", ".join(exits)) if len(exits) > 0 else "There are no exits."
-    objects_string = "\n".join(["{} is here.".format(obj.name) for obj in player.room.objects if obj is not player])
-    player.output('You are in the {}.\n{}\n{}'.format(player.room.name, exits_string, objects_string))
+
+    player.output('You are in the {}.'.format(player.room.name))
+    for obj_string in ["{} is here.".format(obj.getName(player)) for obj in player.room.objects if obj is not player]:
+      player.output(obj_string)
+    player.output("There are exits to the {}.".format(", ".join(exits)) if len(exits) > 0 else "There are no exits.")
 
     for mobile in player.getOtherObjectsInRoom():
       mobile.output('{} looks around.'.format(player.name))

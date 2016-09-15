@@ -51,6 +51,12 @@ class GameObject(object):
     pass
     #debug('UUID [{}] macroRound_update.'.format(self.uid))
 
+  def article(self, word):
+    if word[0].lower() in ['a', 'e', 'i', 'o', 'u']:
+      return "an {}".format(word)
+    else:
+      return "a {}".format(word)
+
   def inflect(self, word):
     synonyms = {
       "r": "'s",
@@ -81,7 +87,7 @@ class GameObject(object):
         name = arg[0].getName(looker=self)
         output_buffer.append("{}{}".format(name, self.inflect(arg[1])))
     result = message.format(*output_buffer)
-    result = result[0].capitalize() + result[1:]
+    result = result[0].capitalize() + result[1:] # shady -> this should all be done in one place
     if auto_output:
       self.output(result)
     else:
@@ -91,7 +97,8 @@ class GameObject(object):
     self.input_queue.append(message)
 
   def output(self, message):
-    self.output_queue.append(message)
+    result = message[0].capitalize() + message[1:]
+    self.output_queue.append(result)
 
   def handle(self, message):
     self.commandHandler.tryCommand(message, self, self.game)

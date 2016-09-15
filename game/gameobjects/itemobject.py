@@ -17,8 +17,12 @@ class Equipment(GameObject):
 class Item(GameObject):
   def __init__(self, game):
     super(Item, self).__init__(game)
-
     self.blindName = 'something'
-
-    self.name = "Crunchy Carrots"
     debug('Item created.')
+
+  def getName(self, looker=None):
+    name = super(Item, self).getName(looker)
+    if name != self.blindName:
+      return self.article(name)
+    else:
+      return name
