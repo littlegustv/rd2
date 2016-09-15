@@ -1,7 +1,7 @@
 import random
 from debug import debug
 from gameobjects.room import Room, inverseDirection
-from gameobjects.itemObject import Item
+from gameobjects.itemobject import Item
 
 class SimpleProcedural():
   def generate_rooms(self):

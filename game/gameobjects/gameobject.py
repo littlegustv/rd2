@@ -78,10 +78,7 @@ class GameObject(object):
         else:
           output_buffer.append("you {}".format(arg[1]))
       else:
-        if self.can_see(arg[0]):
-          name = arg[0].name
-        else:
-          name = self.blindName
+        name = arg[0].getName(looker=self)
         output_buffer.append("{}{}".format(name, self.inflect(arg[1])))
     result = message.format(*output_buffer)
     result = result[0].capitalize() + result[1:]
