@@ -38,3 +38,4 @@ class CommandModule(object):
 			self.commands['bite'] = command_list.do_bite
 			self.commands['kill'] = command_list.do_kill
 			self.commands['flee'] = command_list.do_flee
+			self.commands['burn'] = command_list.do_burn

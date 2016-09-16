@@ -2,6 +2,13 @@ import random
 
 from debug import debug
 
+def do_burn(args, player, game):
+  from affects.default import OnFire
+  fire = OnFire(game)
+  player.objects.append(fire)
+  fire.parent = player
+  player.parent.render('{} to burn', [[player, 'start']])
+
 def do_equipment(args, player, game):
   player.output("You are wearing:")
   for item in player.equipment.objects:
