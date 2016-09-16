@@ -42,7 +42,7 @@ class Mobile(GameObject):
   def removeFromCombat(self):
     self.fighting = None
 
-    for mob in [obj for obj in self.room.objects if isinstance(obj, Mobile)]:
+    for mob in [obj for obj in self.parent.objects if isinstance(obj, Mobile)]:
       if mob.fighting == self:
         mob.fighting = None
 
@@ -95,14 +95,14 @@ class Mobile(GameObject):
     ))
 
     for mob in self.getOtherObjectsInRoom(exceptions=[target]):
-      mob.output('{0}\'s {1} {2} {3} {4}{5].'.format(
+      mob.output('{0}\'s {1} {2} {3} {4}{5}.'.format(
         self.getName(looker=target),
         decorator[2], 
         noun, 
         decorator[1], 
-        target.getName(looker=self)),
+        target.getName(looker=self),
         decorator[3]
-      )
+      ))
 
     if target.getStat('health') <= 0:
       target.doDie()
