@@ -35,5 +35,6 @@ class CommandModule(object):
 			self.commands['equipment'] = command_list.do_equipment
 
 		if self.name == 'combat':
+			self.commands['bite'] = command_list.do_bite
 			self.commands['kill'] = command_list.do_kill
 			self.commands['flee'] = command_list.do_flee

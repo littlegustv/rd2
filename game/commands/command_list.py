@@ -175,6 +175,29 @@ def do_move(direction, player, game):
 
     do_look([], player, game)
 
+def do_bite(args, player, game):
+  if player.fighting is not None:
+    player.doDamage(random.randint(30,100), player.fighting, 'bite')
+    return
+
+  if len(args) == 0:
+    player.output('Kill whom?')
+    return
+
+  target = args[0]
+  targetMobile = player.room.getMobileInRoomByName(target, looker=player)
+
+  if targetMobile is None:
+    player.output('They aren\'t here.')
+    return
+
+  if targetMobile == player:
+    player.output('Suicide is a mortal sin.')
+    return
+
+  do_yell(['Help! I am being attacked by {0}!'.format(player.getName(looker=targetMobile)),], targetMobile, game)
+  player.doDamage(random.randint(30,100), targetMobile, 'bite')
+
 def do_kill(args, player, game):
   if player.fighting is not None:
     player.output('You are already fighting!')
@@ -204,6 +227,14 @@ def do_flee(args, player, game):
     player.output('You aren\'t fighting anyone.')
     return
 
+  available_exits = []
+  for direction, exit in player.parent.exits.iteritems():
+    if exit != None:
+      available_exits.append(direction)
+
+  if len(available_exits) <= 0:
+    player.output('There is no way out!')
+
   if random.randint(0,9) > 4:
     player.output('You can\'t escape!')
 
@@ -216,3 +247,5 @@ def do_flee(args, player, game):
 
     for mobile in player.getOtherObjectsInRoom():
       mobile.output('{} has fled!'.format(player.getName(looker=mobile)))
+
+    do_move(random.choice(available_exits), player, game)

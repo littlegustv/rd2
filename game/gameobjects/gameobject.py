@@ -41,6 +41,7 @@ class GameObject(object):
       if len(self.output_queue) > 0:
         joinedMessage = '\r\n'.join(self.output_queue)
         self.connection.sendOutput("{}\r\n".format(joinedMessage))
+        self.connection.sendOutput(self.prompt())
         self.output_queue = []
 
       # handle command from input buffer
@@ -50,6 +51,9 @@ class GameObject(object):
   def macroRound_update(self, game):
     pass
     #debug('UUID [{}] macroRound_update.'.format(self.uid))
+
+  def prompt(self):
+    return "<{}/{}hp>".format(self.getStat('health'), self.getStat('maxhealth'))
 
   def article(self, word):
     if word[0].lower() in ['a', 'e', 'i', 'o', 'u']:
@@ -122,6 +126,13 @@ class GameObject(object):
       for obj in self.objects:
         s += obj.getModifier(stat)
       return s
+    else:
+      debug('Error: asked for a stat that does not exist ({})'.format(stat))
+      return 0
+
+  def modifyStat(self, stat, value):
+    if hasattr(self.stats, stat):
+      setattr(self.stats, stat, getattr(self.stats, stat) + value)
     else:
       debug('Error: asked for a stat that does not exist ({})'.format(stat))
       return 0

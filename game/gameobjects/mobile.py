@@ -25,7 +25,7 @@ class Mobile(GameObject):
 
     self.attacksPerRound = 2
     self.damageNoun = random.choice(['grep', 'entangle', 'strangle', 'blast'])
-
+    
   def macroRound_update(self, game):
     super(Mobile, self).macroRound_update(game)
 
@@ -46,6 +46,12 @@ class Mobile(GameObject):
       if mob.fighting == self:
         mob.fighting = None
 
+  def doDie(self):
+    self.removeFromCombat()
+    for m in self.game.mobiles:
+      m.render('{} dead!', [[self, 'are']])
+    self.stats.health = self.stats.maxhealth #shady, use accessor methods?
+
   def doCombatRound(self):
     debug('Combat round. [name={0}]'.format(self.name))
 
@@ -55,30 +61,48 @@ class Mobile(GameObject):
   def doCombatHit(self):
     debug('Combat hit. [name={0}]'.format(self.name))
 
-    damage = random.randint(0, 1)
+    damage = random.randint(0, self.getStat('damage'))
     
     self.doDamage(damage=damage, target=self.fighting, noun=self.damageNoun)
 
   def doDamage(self, damage, target, noun):
-    debug('Combat damage. [name={0}]'.format(self.name))
-    decorator = damageDecorators[damage]
+    if not target:
+      return
 
-    self.output('Your {0} {1} {2} {3}.'.format(
-      decorator[0], 
+    debug('Combat damage. [name={0}]'.format(self.name))
+    decorator = damageDecorators[damage % len(damageDecorators)]  # so we don't go out of bounds!
+
+    # combat re-initiated on any damage dealt
+    self.startCombatWith(target)
+
+    target.modifyStat("health", -damage)
+
+    self.output('Your {0} {1} {2} {3}{4}.'.format(
+      decorator[2], 
       noun, 
       decorator[1], 
-      target.getName(looker=self)))
+      target.getName(looker=self),
+      decorator[3]
+    ))
 
-    target.output('{0}\'s {1} {2} {3} you.'.format(
+    target.output('{0}\'s {1} {2} {3} you{4}. {5}'.format(
       self.getName(looker=target),
-      decorator[0], 
+      decorator[2], 
       noun, 
-      decorator[1]))
+      decorator[1],
+      decorator[3],
+      target.getStat('health')
+    ))
 
     for mob in self.getOtherObjectsInRoom(exceptions=[target]):
-      mob.output('{0}\'s {1} {2} {3} {4}.'.format(
+      mob.output('{0}\'s {1} {2} {3} {4}{5].'.format(
         self.getName(looker=target),
-        decorator[0], 
+        decorator[2], 
         noun, 
         decorator[1], 
-        target.getName(looker=self)))
+        target.getName(looker=self)),
+        decorator[3]
+      )
+
+    if target.getStat('health') <= 0:
+      target.doDie()

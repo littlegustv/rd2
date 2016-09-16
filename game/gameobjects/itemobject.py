@@ -1,5 +1,7 @@
 from gameobject import GameObject
 from debug import debug
+from util.status import Status
+import random
 
 # inventory is a gameobject that does not pass its Item's modifiers on to its parent
 class Inventory(GameObject):
@@ -18,6 +20,7 @@ class Item(GameObject):
   def __init__(self, game):
     super(Item, self).__init__(game)
     self.blindName = 'something'
+    self.modifiers = Status(self, {"health": 0, "maxhealth": random.randint(0,50), "damage": random.randint(0,10) })
     debug('Item created.')
 
   def getName(self, looker=None):
